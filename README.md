@@ -5,13 +5,14 @@
   <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
   <img src="https://img.shields.io/badge/Zustand-443E38?style=for-the-badge&logo=react&logoColor=white" alt="Zustand" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Live Demo" />
 </p>
 
 ---
 
 <p align="center">
   <strong>A modern, premium interactive web application for managing hierarchical questions.</strong><br />
+  🚀 <strong>Live : <a href="https://sheets-blond.vercel.app/">APP</a></strong><br />
   Designed specifically for tracking progress through the <strong>ZEUS SDE Sheet</strong> and other curated DSA curriculum.
 </p>
 
@@ -70,7 +71,7 @@ The app comes pre-loaded with **27 Topics** covering essential DSA concepts:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+
@@ -159,16 +160,15 @@ Sheets/
 
 ## 📜 License & Support
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **MIT License**.<br>
 For support, contact **hpmayankmaurya@gmail.com** or open an issue in the repository.
 
 ---
 
-## 📝 Submission Details
+## Submission Details
 
-- **Deadline**: February 10th, 11:59 PM.
-- **Repository**: [mayankkmauryaa/Sheets](https://github.com/mayankkmauryaa/Sheets)
-- **Instructions**: See the [Getting Started](#-getting-started) section.
+- **Repository**: [Sheets](https://github.com/mayankkmauryaa/Sheets)
+- **Instructions**: See the [Getting Started](#getting-started) section.
 
 ---
 
