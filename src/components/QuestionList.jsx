@@ -12,7 +12,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
-import { Plus, ChevronRight, Edit2, Zap, X, Trash2, Book, Sparkles } from 'lucide-react';
+import { Plus, ChevronRight, Edit2, Zap, X, Trash2, Book, Sparkles, GripVertical } from 'lucide-react';
 import useSheetStore from '../store/sheetStore';
 import Question from './Question';
 
@@ -28,7 +28,8 @@ const QuestionList = ({
   onSaveEdit,
   onCancelEdit,
   onEditSubTopic,
-  onDeleteSubTopic
+  onDeleteSubTopic,
+  dragHandleProps
 }) => {
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [newQuestion, setNewQuestion] = useState({
@@ -84,6 +85,12 @@ const QuestionList = ({
           </div>
         ) : (
           <div className="flex items-center gap-2 group flex-1">
+            <div
+              {...dragHandleProps}
+              className="mr-2 cursor-grab active:cursor-grabbing text-yellow-900/40 hover:text-yellow-500 opacity-0 group-hover:opacity-100 transition-all"
+            >
+              <GripVertical size={16} />
+            </div>
             {!isDefaultSubTopic && (
               <>
                 <Sparkles size={14} className="text-yellow-600/60" />

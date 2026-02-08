@@ -78,6 +78,7 @@ const SubTopic = ({ topicId, topicTitle, subTopic, index }) => {
         onEditTitleChange={setEditTitle}
         onSaveEdit={handleSaveEdit}
         onCancelEdit={handleCancelEdit}
+        dragHandleProps={{ ...attributes, ...listeners }}
       />
     </div>
   );

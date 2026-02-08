@@ -11,7 +11,8 @@ import {
     Zap,
     Wand2,
     Scroll,
-    Sparkles
+    Sparkles,
+    RefreshCw
 } from 'lucide-react';
 import useSheetStore from '../store/sheetStore';
 
@@ -30,7 +31,9 @@ const Controls = () => {
         searchQuery,
         setFilterStatus,
         setFilterDifficulty,
-        setSearchQuery
+        setSearchQuery,
+        fetchRemoteSheet,
+        isLoading
     } = useSheetStore();
 
     const handleAddTopic = () => {
@@ -137,6 +140,15 @@ const Controls = () => {
                             >
                                 <Upload size={18} className="group-hover:-translate-y-1 transition-transform" />
                             </label>
+
+                            <button
+                                onClick={() => fetchRemoteSheet()}
+                                className={`flex items-center justify-center w-10 h-10 text-yellow-600 hover:text-yellow-400 hover:bg-yellow-950/30 rounded-lg transition-all group ${isLoading ? 'animate-spin text-yellow-500' : ''}`}
+                                title="Sync with Codolio"
+                                disabled={isLoading}
+                            >
+                                <RefreshCw size={18} />
+                            </button>
 
                             <button
                                 onClick={handleExport}
