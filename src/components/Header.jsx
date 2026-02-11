@@ -148,24 +148,27 @@ const Header = () => {
           <div className="w-11 h-11 mr-3 flex-shrink-0 bg-[#0c1428] rounded-full overflow-hidden border-2 border-yellow-600 flex items-center justify-center glow-gold">
             <Zap size={22} className="text-yellow-500 sparkle-animation" />
           </div>
-          <ChevronRight size={14} className="text-yellow-700 mx-2" />
-          <span
-            onClick={() => setView('dashboard')}
-            className="text-yellow-500/80 hover:text-yellow-400 cursor-pointer transition-colors tracking-widest uppercase text-[10px] font-black"
-          >
-            Sheets
-          </span>
-          {currentView === 'sheet' && (
-            <>
               <ChevronRight size={14} className="text-yellow-700 mx-2" />
               <span
-                onClick={() => setView('sheet')}
-                className="text-yellow-400 font-black font-magical tracking-wider cursor-pointer hover:text-yellow-300 transition-colors"
+                onClick={() => setView('dashboard')}
+                className="text-yellow-500/80 hover:text-yellow-400 cursor-pointer transition-colors tracking-widest uppercase text-[10px] font-black"
               >
-                ZEUS MAGIC SHEET
+                Sheets
               </span>
-            </>
-          )}
+              {currentView === 'sheet' && (() => {
+                const currentSheet = useSheetStore.getState().getCurrentSheet();
+                return (
+                  <>
+                    <ChevronRight size={14} className="text-yellow-700 mx-2" />
+                    <span
+                      onClick={() => setView('sheet')}
+                      className="text-yellow-400 font-black font-magical tracking-wider cursor-pointer hover:text-yellow-300 transition-colors"
+                    >
+                      {currentSheet?.icon} {currentSheet?.title}
+                    </span>
+                  </>
+                );
+              })()}
 
           {/* Spacer */}
           <div className="flex-1" />
@@ -204,15 +207,21 @@ const Header = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
                   <h1 className="text-3xl md:text-4xl font-black text-yellow-500 text-glow-gold font-magical tracking-widest uppercase wingardium-leviosa group cursor-default">
-                    ⚡ ZEUS MAGIC SHEET
+                    {(() => {
+                      const currentSheet = useSheetStore.getState().getCurrentSheet();
+                      return `${currentSheet?.icon} ${currentSheet?.title}`;
+                    })()}
                   </h1>
                   <span className="px-2 py-0.5 bg-yellow-900/40 text-yellow-400 text-[10px] font-black rounded border border-yellow-700/50 uppercase tracking-widest">
                     Latest Edition
                   </span>
                 </div>
-                <p className="text-yellow-100/80 text-sm leading-relaxed max-w-xl font-serif italic">
-                  Master these algorithmic challenges to crack your dream job at Google, Amazon, and beyond. Track your progress and consistency... ✨
-                </p>
+                 <p className="text-yellow-100/80 text-sm leading-relaxed max-w-xl font-serif italic">
+                   {(() => {
+                     const currentSheet = useSheetStore.getState().getCurrentSheet();
+                     return currentSheet?.description || 'Master these algorithmic challenges to crack your dream job at Google, Amazon, and beyond. Track your progress and consistency... ✨';
+                   })()}
+                 </p>
               </div>
 
               {/* Right Side - Stats */}

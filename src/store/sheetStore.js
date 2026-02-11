@@ -20,7 +20,7 @@ const useSheetStore = create(
       isLoading: false,
       error: null,
       lastSynced: null,
-      currentView: 'sheet', // 'sheet' or 'dashboard'
+      currentView: 'dashboard', // 'sheet' or 'dashboard'
 
       // Actions - View
       setView: (view) => set({ currentView: view }),
@@ -467,12 +467,71 @@ const useSheetStore = create(
         });
       },
 
-      // const sde = "https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/striver-sde-sheet";
+      // Available Sheets Configuration
+      availableSheets: [
+        {
+          id: 'strivers-a2z-dsa-sheet',
+          title: 'ZEUS A2Z DSA',
+          description: 'Complete DSA journey from fundamentals to advanced topics. Structured learning path for interview preparation.',
+          difficulty: 'Beginner to Advanced',
+          totalQuestions: 0,
+          completedQuestions: 0,
+          color: 'blue',
+          icon: '🔮',
+          isPopular: true
+        },
+        {
+          id: 'striver-sde-sheet',
+          title: 'ZEUS SDE SHEET',
+          description: 'Master the Art of Coding with the legendary SDE sheet. 450+ hand-picked problems from top tech archives.',
+          difficulty: 'Intermediate to Advanced',
+          totalQuestions: 0,
+          completedQuestions: 0,
+          color: 'yellow',
+          icon: '⚡',
+          isPopular: true
+        }
+      ],
 
-      // const a2z = 'https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/strivers-a2z-dsa-sheet';
+      // Current active sheet
+      currentSheetId: 'strivers-a2z-dsa-sheet',
+
+      /*
+      const sde = https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/striver-sde-sheet;
+
+      const a2z = 'https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/strivers-a2z-dsa-sheet';
+
+      const cp31 : ['https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/800-rated-cp-31-sheet','https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/900-rated-cp-31-sheet'
       
+
+      .... from 800-1900
+    ]
+      */
+
+      // Sheet Management Actions
+      setCurrentSheet: (sheetId) => set({ currentSheetId: sheetId }),
+
+      getCurrentSheet: () => {
+        const state = get();
+        return state.availableSheets.find(sheet => sheet.id === state.currentSheetId) || state.availableSheets[0];
+      },
+
+      updateSheetProgress: (sheetId, stats) => {
+        set((state) => ({
+          availableSheets: state.availableSheets.map(sheet =>
+            sheet.id === sheetId
+              ? {
+                ...sheet,
+                totalQuestions: stats.totalQuestions,
+                completedQuestions: stats.completedQuestions
+              }
+              : sheet
+          )
+        }));
+      },
+
       // API Integration - Fetch Remote Sheet
-      fetchRemoteSheet: async (slug = 'striver-a2z-dsa-sheet') => {
+      fetchRemoteSheet: async (slug = 'strivers-a2z-dsa-sheet') => {
         set({ isLoading: true, error: null });
         try {
           const response = await fetch(`https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/${slug}`);
@@ -532,6 +591,17 @@ const useSheetStore = create(
               subTopics
             };
           });
+
+          const stats = {
+            totalQuestions: newTopics.reduce((acc, topic) =>
+              acc + topic.subTopics.reduce((subAcc, subTopic) =>
+                subAcc + subTopic.questions.length, 0), 0),
+            completedQuestions: newTopics.reduce((acc, topic) =>
+              acc + topic.subTopics.reduce((subAcc, subTopic) =>
+                subAcc + subTopic.questions.filter(q => q.status === 'completed').length, 0), 0)
+          };
+
+          get().updateSheetProgress(slug, stats);
 
           set({
             topics: newTopics,
@@ -621,7 +691,7 @@ const useSheetStore = create(
       }
     }),
     {
-      name: 'sheets-storage',
+      name: 'zeus-sheets-storage',
       partialize: (state) => ({
         topics: state.topics,
         expandedTopics: Array.from(state.expandedTopics),
@@ -629,7 +699,9 @@ const useSheetStore = create(
         activity: state.activity,
         currentStreak: state.currentStreak,
         maxStreak: state.maxStreak,
-        lastSynced: state.lastSynced
+        lastSynced: state.lastSynced,
+        currentSheetId: state.currentSheetId,
+        availableSheets: state.availableSheets
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {

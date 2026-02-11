@@ -42,16 +42,17 @@ function App() {
     }
   }, [consolidateSheets]);
 
-  // Initial data fetch from Codolio
+  // Initial data fetch from Codolio - Only fetch when entering sheet view
   React.useEffect(() => {
-    // Only fetch if we have no topics or if we're forced (e.g., first time)
-    // Checking against a dummy ID from initialData if necessary, 
-    // but usually, we want to fetch once if lastSynced is null.
-    const lastSynced = useSheetStore.getState().lastSynced;
-    if (!lastSynced) {
-      fetchRemoteSheet();
+    // Only fetch when actually viewing a sheet, not on dashboard
+    if (currentView === 'sheet') {
+      const lastSynced = useSheetStore.getState().lastSynced;
+      const currentSheetId = useSheetStore.getState().currentSheetId;
+      if (!lastSynced) {
+        fetchRemoteSheet(currentSheetId);
+      }
     }
-  }, [fetchRemoteSheet]);
+  }, [fetchRemoteSheet, currentView]);
 
   // Filter topics based on search and filters
   const filteredTopics = topics.map(topic => {
@@ -126,9 +127,7 @@ function App() {
           </div>
         ) : (
           <>
-            {currentView === 'dashboard' ? (
-              <Dashboard />
-            ) : (
+            {currentView === 'sheet' ? (
               <>
                 <ActivityGraph />
                 <Controls />
@@ -154,6 +153,8 @@ function App() {
                   </div>
                 )}
               </>
+            ) : (
+              <Dashboard />
             )}
           </>
         )}
