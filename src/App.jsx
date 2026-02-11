@@ -55,13 +55,13 @@ function App() {
 
   // Filter topics based on search and filters
   const filteredTopics = topics.map(topic => {
-    const topicMatchesSearch = topic.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const topicMatchesSearch = topic.title?.toLowerCase().includes(searchQuery?.toLowerCase() || '');
 
     const filteredSubTopics = topic.subTopics.map(subTopic => {
-      const subTopicMatchesSearch = subTopic.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const subTopicMatchesSearch = subTopic.title?.toLowerCase().includes(searchQuery?.toLowerCase() || '');
 
       const filteredQuestions = subTopic.questions.filter(question => {
-        const matchesSearch = question.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        const matchesSearch = question.title?.toLowerCase().includes(searchQuery?.toLowerCase() || '') ||
           topicMatchesSearch ||
           subTopicMatchesSearch;
         const matchesStatus = filterStatus === 'all' || question.status === filterStatus;
@@ -76,7 +76,7 @@ function App() {
       };
     }).filter(subTopic =>
       subTopic.questions.length > 0 ||
-      subTopic.title.toLowerCase().includes(searchQuery.toLowerCase())
+      subTopic.title?.toLowerCase().includes(searchQuery?.toLowerCase() || '')
     );
 
     return {
@@ -85,7 +85,7 @@ function App() {
     };
   }).filter(topic =>
     topic.subTopics.length > 0 ||
-    topic.title.toLowerCase().includes(searchQuery.toLowerCase())
+    topic.title?.toLowerCase().includes(searchQuery?.toLowerCase() || '')
   );
 
   return (

@@ -467,8 +467,12 @@ const useSheetStore = create(
         });
       },
 
+      // const sde = "https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/striver-sde-sheet";
+
+      // const a2z = 'https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/strivers-a2z-dsa-sheet';
+      
       // API Integration - Fetch Remote Sheet
-      fetchRemoteSheet: async (slug = 'striver-sde-sheet') => {
+      fetchRemoteSheet: async (slug = 'striver-a2z-dsa-sheet') => {
         set({ isLoading: true, error: null });
         try {
           const response = await fetch(`https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/${slug}`);
