@@ -102,14 +102,20 @@ a:hover {
 
 /* Glass effect cards (Magic Parchment) */
 .glass-card {
-  background: rgba(12, 20, 40, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 215, 0, 0.15);
+  background: rgba(12, 20, 40, 0.4);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 10px rgba(255, 215, 0, 0.02);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 215, 0, 0.4);
-  box-shadow: 0 0 25px rgba(255, 215, 0, 0.05);
+  border-color: rgba(255, 215, 0, 0.3);
+  box-shadow: 
+    0 8px 40px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(255, 215, 0, 0.05),
+    inset 0 0 15px rgba(255, 215, 0, 0.05);
 }
 
 /* Glow effects */
@@ -320,7 +326,49 @@ a:hover {
 
 /* Smooth transitions */
 .transition-smooth {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Magical Text Gradient */
+.text-magic-gradient {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #7e0001 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Arcane Border Gradient */
+.border-arcane {
+  border: 1px solid transparent;
+  background-image: linear-gradient(#050a14, #050a14), linear-gradient(135deg, #ffd70033, #7e000133);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+/* Hover Shine Effect */
+.hover-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.7s ease;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hover-shine:hover::after {
+  opacity: 1;
+  left: 100%;
+  top: 100%;
 }
 
 /* Hide default cursor on special elements if needed */

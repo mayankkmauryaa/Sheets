@@ -1,16 +1,19 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from './components/layout/Header';
+import Header from './layouts/Header';
 import TopicList from './features/sheet/TopicList';
 import ActivityGraph from './features/sheet/ActivityGraph';
 import Controls from './features/sheet/Controls';
 import Dashboard from './features/dashboard/Dashboard';
+import AboutUsModal from './layouts/AboutUsModal';
+import MagicalBackground from './layouts/MagicalBackground';
 import useSheetStore from './store/sheetStore';
 import { getIdBySlug, getSlugById } from './store/sheets';
 
 function App() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [isAboutUsOpen, setIsAboutUsOpen] = React.useState(false);
 
   // Inject global asset styles from environment variables
   React.useEffect(() => {
@@ -138,11 +141,12 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-[#050a14] selection:bg-yellow-900/30">
+    <div className="min-h-screen selection:bg-yellow-900/30 relative overflow-hidden">
+      <MagicalBackground />
       <Header />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 reveal-animation">
+      <main key={currentView} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 reveal-animation">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-32">
             <div className="relative">
@@ -216,16 +220,24 @@ function App() {
               ✨ ZEUS MAGIC SHEETS - Master the Art of Coding
             </p>
             <div className="flex items-center gap-6">
+              <button
+                onClick={() => setIsAboutUsOpen(true)}
+                className="text-xs text-yellow-500/60 hover:text-yellow-400 font-magical uppercase tracking-widest transition-all"
+              >
+                About Us
+              </button>
               <p className="text-xs text-red-900/40 font-serif italic">
                 Powered by ZEUS Archives
               </p>
-              {/* <p className="text-sm text-yellow-900/40">
-                
-              </p> */}
             </div>
           </div>
         </div>
       </footer>
+
+      <AboutUsModal
+        isOpen={isAboutUsOpen}
+        onClose={() => setIsAboutUsOpen(false)}
+      />
     </div>
   );
 }

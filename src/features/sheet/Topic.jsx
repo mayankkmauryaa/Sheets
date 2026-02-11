@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { ChevronDown, Edit2, Trash2, MoreHorizontal, Zap, X, GripVertical, Plus, BookOpen, Scroll as ScrollIcon } from 'lucide-react';
 import useSheetStore from '../../store/sheetStore';
 import SubTopicList from './SubTopicList';
+import { Progress, ProgressInfo, Button, ManuscriptCard } from '../../components/ui';
 
 const Topic = ({ topic, index }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -77,12 +78,11 @@ const Topic = ({ topic, index }) => {
   return (
     <div ref={setNodeRef} style={style} className="mb-4 reveal-animation">
       {/* Topic Header */}
-      <div
-        className={`glass-card flex items-center px-6 py-5 rounded-2xl cursor-pointer transition-all duration-500 group relative ${isExpanded ? 'rounded-b-none border-b-0 bg-[#0c1428]' : 'hover:bg-[#0c1428]/80'
+      <ManuscriptCard
+        className={`flex items-center px-6 py-5 cursor-pointer transition-all duration-500 group relative ${isExpanded ? 'rounded-b-none border-b-0 bg-[#0c1428]' : 'hover:bg-[#0c1428]'
           }`}
         onClick={() => !isEditing && toggleTopicExpansion(topic.id)}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-900/5 to-transparent pointer-events-none" />
 
         {/* Drag Handle */}
         <div
@@ -110,12 +110,12 @@ const Topic = ({ topic, index }) => {
               autoFocus
               onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
             />
-            <button onClick={handleSaveEdit} className="p-2.5 bg-yellow-600 hover:bg-yellow-500 text-[#050a14] rounded-xl transition-all shadow-lg shadow-yellow-900/20">
+            <Button variant="primary" size="sm" onClick={handleSaveEdit}>
               <Zap size={16} />
-            </button>
-            <button onClick={handleCancelEdit} className="p-2.5 bg-red-900/20 hover:bg-red-900/40 text-red-500 rounded-xl transition-all">
+            </Button>
+            <Button variant="danger" size="sm" onClick={handleCancelEdit}>
               <X size={16} />
-            </button>
+            </Button>
           </div>
         ) : (
           <>
@@ -129,15 +129,8 @@ const Topic = ({ topic, index }) => {
 
               {/* Progress info */}
               <div className="flex items-center gap-4">
-                <div className="flex-1 h-1 bg-[#050a14] rounded-full overflow-hidden max-w-[200px]">
-                  <div
-                    className="h-full bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-300 rounded-full transition-all duration-1000 progress-bar-animated"
-                    style={{ width: `${progressPercentage}%` }}
-                  />
-                </div>
-                <span className="text-[10px] font-black text-yellow-600 uppercase tracking-widest font-magical">
-                  {completedQuestions} / {totalQuestions} Completed
-                </span>
+                <Progress value={completedQuestions} max={totalQuestions} className="flex-1 max-w-[200px]" />
+                <ProgressInfo completed={completedQuestions} total={totalQuestions} />
               </div>
             </div>
 
@@ -182,41 +175,45 @@ const Topic = ({ topic, index }) => {
             </div>
           </>
         )}
-      </div>
+      </ManuscriptCard>
 
       {/* Add SubTopic Input */}
-      {showAddSubTopic && (
-        <div className="flex items-center gap-3 px-6 py-5 bg-[#0c1428]/40 border-x border-[#ffd7001a] expand-animation relative">
-          <div className="absolute inset-y-0 left-0 w-1 bg-yellow-600 shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
-          <input
-            type="text"
-            placeholder="Name the new subtopic..."
-            value={newSubTopicTitle}
-            onChange={(e) => setNewSubTopicTitle(e.target.value)}
-            className="flex-1 bg-[#050a14]/60 text-yellow-100 px-5 py-3 rounded-xl border border-yellow-900/30 focus:border-yellow-500 focus:outline-none text-sm placeholder-yellow-900/30 font-serif italic"
-            autoFocus
-            onKeyPress={(e) => e.key === 'Enter' && handleAddSubTopic()}
-          />
-          <button onClick={handleAddSubTopic} className="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-[#050a14] text-xs font-black uppercase tracking-widest font-magical rounded-xl transition-all shadow-lg shadow-yellow-900/20">
-            Add
-          </button>
-          <button onClick={() => { setShowAddSubTopic(false); setNewSubTopicTitle(''); }} className="px-4 py-3 text-yellow-900 hover:text-yellow-500 text-xs font-black uppercase tracking-widest font-magical transition-all">
-            Cancel
-          </button>
-        </div>
-      )}
+      {
+        showAddSubTopic && (
+          <div className="flex items-center gap-3 px-6 py-5 bg-[#0c1428]/40 border-x border-[#ffd7001a] expand-animation relative">
+            <div className="absolute inset-y-0 left-0 w-1 bg-yellow-600 shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
+            <input
+              type="text"
+              placeholder="Name the new subtopic..."
+              value={newSubTopicTitle}
+              onChange={(e) => setNewSubTopicTitle(e.target.value)}
+              className="flex-1 bg-[#050a14]/60 text-yellow-100 px-5 py-3 rounded-xl border border-yellow-900/30 focus:border-yellow-500 focus:outline-none text-sm placeholder-yellow-900/30 font-serif italic"
+              autoFocus
+              onKeyPress={(e) => e.key === 'Enter' && handleAddSubTopic()}
+            />
+            <button onClick={handleAddSubTopic} className="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-[#050a14] text-xs font-black uppercase tracking-widest font-magical rounded-xl transition-all shadow-lg shadow-yellow-900/20">
+              Add
+            </button>
+            <button onClick={() => { setShowAddSubTopic(false); setNewSubTopicTitle(''); }} className="px-4 py-3 text-yellow-900 hover:text-yellow-500 text-xs font-black uppercase tracking-widest font-magical transition-all">
+              Cancel
+            </button>
+          </div>
+        )
+      }
 
       {/* SubTopics List */}
-      {isExpanded && (
-        <div className="glass-card border-t-0 rounded-t-none rounded-b-2xl overflow-hidden shadow-2xl bg-[#0c1428]/30 card-enter">
-          <SubTopicList
-            topicId={topic.id}
-            topicTitle={topic.title}
-            subTopics={topic.subTopics}
-          />
-        </div>
-      )}
-    </div>
+      {
+        isExpanded && (
+          <div className="glass-card border-t-0 rounded-t-none rounded-b-2xl overflow-hidden shadow-2xl bg-[#0c1428]/30 card-enter">
+            <SubTopicList
+              topicId={topic.id}
+              topicTitle={topic.title}
+              subTopics={topic.subTopics}
+            />
+          </div>
+        )
+      }
+    </div >
   );
 };
 

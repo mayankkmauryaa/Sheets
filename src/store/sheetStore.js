@@ -548,7 +548,7 @@ const useSheetStore = create(
           questions.forEach((q, index) => {
             // Normalize CP-31 nested structure vs Standard structure
             const qData = q.questionId || {};
-            const topicTitle = q.topic || qData.topics?.[0] || 'Uncategorized';
+            const topicTitle = q.topic || qData.topics?.[0] || 'General';
             const subTopicTitle = q.subTopic || '';
 
             // Map numeric ratings (800-1900) or strings to Display Difficulty

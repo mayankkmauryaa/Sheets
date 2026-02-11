@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Plus,
   ChevronDown,
@@ -20,14 +21,13 @@ import {
   Scroll,
   ShieldCheck
 } from 'lucide-react';
-import useSheetStore from '../../store/sheetStore';
+import useSheetStore from '../store/sheetStore';
+import { Button, Badge, Progress, ManuscriptCard } from '../components/ui';
 
 // Progress Card Component with Glass Effect
 const ProgressCard = ({ label, completed, total, color, icon }) => {
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-
   return (
-    <div className={`glass-card rounded-xl p-4 min-w-[110px] transition-smooth hover:scale-105 cursor-default border-[#ffd70033] ${color === 'text-green-500' ? 'shadow-[0_0_15px_rgba(34,197,94,0.05)]' : color === 'text-red-500' ? 'shadow-[0_0_15px_rgba(239,68,68,0.05)]' : 'shadow-[0_0_15px_rgba(234,179,8,0.05)]'}`}>
+    <ManuscriptCard className="p-4 min-w-[110px] transition-smooth hover:scale-105 cursor-default group">
       <div className="flex items-center gap-2 mb-2">
         {icon && <span className="text-lg sparkle-animation">{icon}</span>}
         <span className={`text-xs font-bold ${color} uppercase tracking-widest font-magical opacity-80`}>{label}</span>
@@ -36,13 +36,8 @@ const ProgressCard = ({ label, completed, total, color, icon }) => {
         <span className={`text-2xl font-black ${color} font-magical`}>{completed}</span>
         <span className="text-xs text-yellow-700/60 font-bold">/ {total}</span>
       </div>
-      <div className="mt-3 w-full h-1 bg-[#050a14] rounded-full overflow-hidden">
-        <div
-          className={`h-full bg-gradient-to-r ${color.includes('green') ? 'from-green-900 to-green-500 shadow-[0_0_10px_#22c55e66]' : color.includes('red') ? 'from-red-900 to-red-500 shadow-[0_0_10px_#ef444466]' : 'from-yellow-700 to-yellow-500 shadow-[0_0_10px_#eab30866]'} rounded-full transition-all duration-1000 ease-out progress-bar-animated`}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
+      <Progress value={completed} max={total} className="mt-3" />
+    </ManuscriptCard>
   );
 };
 
@@ -94,6 +89,7 @@ const CircularProgress = ({ percentage, size = 70 }) => {
 const Header = () => {
   const [randomQuestion, setRandomQuestion] = useState(null);
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const {
     topics,
@@ -133,10 +129,7 @@ const Header = () => {
 
   return (
     <div
-      className="border-b border-[#ffd70033] relative z-40 bg-[#050a14]"
-      style={{
-        backgroundImage: 'radial-gradient(circle at center, rgba(126, 0, 1, 0.1) 0%, transparent 70%)',
-      }}
+      className="border-b border-[#ffd70033] relative z-40 bg-transparent backdrop-blur-md"
     >
       {/* Sparkle Overlay */}
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none" />
@@ -145,7 +138,10 @@ const Header = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-14 text-sm font-serif">
           {/* Magical Logo */}
-          <div className="w-11 h-11 mr-3 flex-shrink-0 bg-[#0c1428] rounded-full overflow-hidden border-2 border-yellow-600 flex items-center justify-center glow-gold">
+          <div
+            onClick={() => navigate('/')}
+            className="w-11 h-11 mr-3 flex-shrink-0 bg-[#0c1428] rounded-full overflow-hidden border-2 border-yellow-600 flex items-center justify-center glow-gold cursor-pointer hover:scale-110 active:scale-95 transition-all"
+          >
             <Zap size={22} className="text-yellow-500 sparkle-animation" />
           </div>
           <ChevronRight size={14} className="text-yellow-700 mx-2" />
@@ -187,13 +183,15 @@ const Header = () => {
           </div>
 
           {/* Share Button */}
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={handleShare}
-            className={`flex items-center gap-2 px-4 py-1.5 glass-card rounded-lg text-yellow-500 hover:text-yellow-400 text-xs font-bold transition-smooth uppercase tracking-widest border-[#ffd70033] ${copied ? 'bg-green-500/10 border-green-500/40 text-green-400' : ''}`}
+            className={copied ? 'bg-green-500/10 border-green-500/40 text-green-400' : ''}
           >
             {copied ? <ShieldCheck size={14} /> : <Share2 size={14} />}
             {copied ? 'Copied!' : 'Share'}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -213,9 +211,9 @@ const Header = () => {
                     })()}
                   </h1>
                   <div className="flex flex-col gap-1">
-                    <span className="px-2 py-0.5 bg-yellow-900/40 text-yellow-400 text-[10px] font-black rounded border border-yellow-700/50 uppercase tracking-widest text-center">
+                    <Badge variant="magical" className="border-yellow-700/50">
                       Latest Edition
-                    </span>
+                    </Badge>
                     {(() => {
                       const currentSheet = useSheetStore.getState().getCurrentSheet();
                       return currentSheet?.author && (
@@ -279,14 +277,16 @@ const Header = () => {
               />
 
               {/* Expecto Patronum Button */}
-              <button
+              <Button
+                variant="danger"
+                size="lg"
                 onClick={handleRandomQuestion}
-                className="btn-magical flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-[#7e0001] to-[#a30002] hover:from-[#a30002] hover:to-[#c40003] text-white rounded-xl font-bold text-sm border border-red-700/50 shadow-xl shadow-[#7e00014d] transition-smooth group ml-auto lg:ml-0"
+                className="btn-magical bg-gradient-to-r from-[#7e0001] to-[#a30002] hover:from-[#a30002] hover:to-[#c40003] border-red-700/50 shadow-[#7e00014d] ml-auto lg:ml-0"
               >
                 <Shuffle size={18} className="group-hover:rotate-180 transition-transform duration-700" />
                 Surprise Me!
                 <Sparkles size={16} className="text-yellow-400 sparkle-animation" />
-              </button>
+              </Button>
             </div>
 
             {/* Global Progress Bar */}
@@ -295,12 +295,7 @@ const Header = () => {
                 <span className="text-[10px] font-black text-yellow-700 uppercase tracking-widest font-magical">Total Completion</span>
                 <span className="text-[10px] font-black text-yellow-500 font-magical">{stats.completionRate}%</span>
               </div>
-              <div className="w-full bg-[#0c1428] rounded-full h-2.5 overflow-hidden border border-[#ffd7001a] p-0.5">
-                <div
-                  className="h-full bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-300 rounded-full progress-bar-animated transition-all duration-1000"
-                  style={{ width: `${stats.completionRate}%` }}
-                />
-              </div>
+              <Progress value={stats.completionRate} max={100} className="h-2.5 p-0.5 border border-[#ffd7001a]" />
             </div>
           </div>
 

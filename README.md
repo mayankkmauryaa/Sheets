@@ -22,10 +22,28 @@
 
 ---
 
+## 📜 Table of Contents
+1. [The Vision](#-the-vision)
+2. [Zeus Magic Features](#-zeus-magic-features)
+3. [The Manuscript Architecture](#-the-manuscript-architecture)
+4. [Documentation & Sacred Lore](#-documentation--sacred-lore)
+5. [Getting Started](#getting-started)
+6. [Deployment](#-deployment-guide)
+
+---
+
+## 👁️ The Vision
+
+**Sheets** is not just a tool; it's a sanctuary for the modern developer. Inspired by the ancient power of Zeus, this platform transforms the mundane task of DSA tracking into a legendary journey. Every question solved is a victory, every streak maintained is a flame that never dies.
+
+---
+
 ## ✨ Final Implementation Status
 
 The application is **100% complete** and production-ready, featuring the full **ZEUS SDE Sheet** dataset.
 
+- 🔮 **Zeus Magic Theme**: Immersive dark-magic aesthetic with aurora backgrounds and starfields.
+- 🚀 **Dynamic Landing Page**: Features a 3D Aurora Hero, themed parallax sections, and interactive artifacts.
 - 💎 **Complete Dataset**: 27 topics and 191+ real questions integrated.
 - ⚡ **Full CRUD**: Create, Read, Update, and Delete topics, sub-topics, and questions.
 - 🎯 **Drag & Drop**: Intuitive reordering at all hierarchical levels using `@dnd-kit`.
@@ -35,6 +53,7 @@ The application is **100% complete** and production-ready, featuring the full **
 - 📤 **Import/Export**: Backup and restore your study progress as JSON.
 - 📱 **Mobile Optimized**: Fully responsive interface for all device sizes.
 - **Improved Routing**: Human-readable URLs (e.g., `/u/zeus-a2z-dsa`) for easy sharing and navigation.
+- 🎨 **Centralized UI Library**: Reusable components for consistent design.
 
 ---
 
@@ -128,22 +147,53 @@ The project follows a scalable, feature-based architecture:
 ```
 src/
 ├── features/           # Feature-specific components
+│   ├── landing/        # Zeus Magic Landing Page
+│   │   ├── LandingPage.jsx
+│   │   ├── TextParallaxContent.jsx
+│   │   └── ...
 │   ├── dashboard/      # Dashboard and Sheet Selection views
-│   │   ├── Dashboard.jsx
-│   │   └── SheetSelection.jsx
 │   └── sheet/          # Sheet view components
-│       ├── TopicList.jsx
-│       ├── QuestionList.jsx
-│       ├── ActivityGraph.jsx
-│       └── ...
+├── layouts/            # Global layout components (Header, Background, Modals)
 ├── components/         # Shared components
-│   ├── layout/         # Layout wrappers (Header, etc.)
-│   └── ui/             # Reusable UI elements
+│   └── ui/             # Reusable UI library (Badge, Button, Card, etc.)
 ├── store/              # State management (Zustand)
-│   ├── sheetStore.js   # Main store logic
-│   └── sheets.js       # Sheet configuration and metadata
 └── Router.jsx          # Routing configuration
 ```
+
+## 🏗️ The Manuscript Architecture
+
+The system is architected for maximum speed and readability, mirroring the efficiency of lightning.
+
+### 1. Features Layer (`src/features`)
+- **Landing**: The entry portal for seekers.
+- **Dashboard**: The central hub for all manuscripts.
+- **Sheet**: The sacred practice area where individual problems are faced.
+
+### 2. Global Layouts (`src/layouts`)
+- **Magical Background**: Persistent 3D environments that travel with you across pages.
+- **Header**: Optimized navigation and live statistics tracking.
+
+### 3. State Core (`src/store`)
+- A unified source of truth powered by **Zustand**, managing hierarchical data structures with surgical precision.
+
+---
+
+## 📚 Documentation & Sacred Lore
+
+The **"View Documentation"** button in the Artifacts of Power section serves as your portal to the deeper understanding of this system. It encompasses:
+
+### 1. The Core Mechanics
+- **Hierarchical Persistence**: Data flows through a 3-tier structure (Sheet -> Topic -> Sub-topic -> Question), ensuring that complex DSA patterns are broken down into manageable glyphs.
+- **State Synchronization**: Uses **Zustand** with a middleware layer to ensure your progress is etched into the browser's local storage instantly.
+
+### 2. UI Artifacts
+- **Manuscript Cards**: Designed with glassmorphism to feel like floating archives.
+- **Aurora Hero**: A 3D starfield crafted with `three.js` to represent the infinite space of knowledge.
+- **The Patronus Charm**: Uses a randomized selection algorithm to challenge you with a problem when you need guidance most.
+
+### 3. Sacred Commands
+- `npm run dev`: Ignites the development spell.
+- `npm run build`: Crystallizes the manuscript for production.
 
 ---
 

@@ -19,53 +19,7 @@ import {
 } from 'lucide-react';
 import useSheetStore from '../../store/sheetStore';
 
-// Platform badge
-const PlatformBadge = ({ platform }) => {
-  const config = {
-    leetcode: { bg: 'bg-gradient-to-r from-orange-950 to-orange-900 border-orange-800/30', text: 'LC' },
-    geeksforgeeks: { bg: 'bg-gradient-to-r from-green-950 to-green-900 border-green-800/30', text: 'GFG' },
-    gfg: { bg: 'bg-gradient-to-r from-green-950 to-green-900 border-green-800/30', text: 'GFG' },
-    interviewbit: { bg: 'bg-gradient-to-r from-blue-950 to-blue-900 border-blue-800/30', text: 'IB' },
-  };
-
-  const p = platform?.toLowerCase() || '';
-  const c = Object.keys(config).find(k => p.includes(k));
-  const { bg, text } = c ? config[c] : { bg: 'bg-[#050a14] border-yellow-900/20', text: platform?.slice(0, 3) || '?' };
-
-  return (
-    <span className={`px-2 py-0.5 ${bg} text-yellow-500/80 text-[10px] font-black uppercase tracking-widest rounded border shadow-sm font-magical`}>
-      {text}
-    </span>
-  );
-};
-
-// Difficulty badge
-const DifficultyBadge = ({ difficulty }) => {
-  const config = {
-    Easy: 'text-green-500/80 bg-green-950/20 border-green-900/40 shadow-[0_0_10px_rgba(34,197,94,0.1)]',
-    Medium: 'text-yellow-500/80 bg-yellow-950/20 border-yellow-900/40 shadow-[0_0_10px_rgba(234,179,8,0.1)]',
-    Hard: 'text-red-500/80 bg-red-950/20 border-red-900/40 shadow-[0_0_10px_rgba(239,68,68,0.1)]',
-  };
-
-  const labels = {
-    Easy: 'Easy',
-    Medium: 'Medium',
-    Hard: 'Hard',
-  };
-
-  return (
-    <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-lg border font-magical transition-all duration-500 hover:scale-105 ${config[difficulty] || 'text-yellow-700 bg-yellow-950/20 border-yellow-900/30'}`}>
-      {labels[difficulty] || difficulty}
-    </span>
-  );
-};
-
-// Tag pill
-const TagPill = ({ tag, color = 'text-yellow-700', bg = 'bg-[#0c1428]' }) => (
-  <span className={`px-2 py-0.5 ${bg} ${color} text-[9px] font-black uppercase tracking-widest rounded-full border border-yellow-900/20 font-magical`}>
-    {tag}
-  </span>
-);
+import { PlatformBadge, DifficultyBadge, TagPill } from '../../components/ui';
 
 // Notes Modal
 const NotesModal = ({ question, topicId, subTopicId, onClose }) => {
@@ -257,7 +211,7 @@ const Question = ({ topicId, subTopicId, question, index }) => {
 
             {/* Platform */}
             <div className="w-20 flex-shrink-0 flex justify-center">
-              <PlatformBadge platform={question.platform} />
+              <PlatformBadge platform={question.platform} link={question.link} />
             </div>
 
             {/* Difficulty */}

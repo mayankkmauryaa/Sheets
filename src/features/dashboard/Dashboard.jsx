@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Zap, ChevronRight, BookOpen, Star, Trophy, Sparkles, Plus, Search } from 'lucide-react';
 import useSheetStore from '../../store/sheetStore';
 import { getSlugById } from '../../store/sheets';
+import { Button, ManuscriptCard, Progress, Badge } from '../../components/ui';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -50,16 +51,16 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Search Box */}
-            <div className="mb-8">
-                <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-600/60" size={20} />
+            <div className="mb-10">
+                <div className="relative group max-w-2xl mx-auto">
+                    <div className="absolute inset-0 bg-yellow-500/5 blur-2xl group-focus-within:bg-yellow-500/10 transition-all opacity-0 group-focus-within:opacity-100" />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-yellow-600/60 group-focus-within:text-yellow-500 transition-colors" size={20} />
                     <input
                         type="text"
-                        placeholder="Search manuscripts..."
+                        placeholder="Search the ancient manuscripts..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-[#0c1428]/80 border border-yellow-900/30 rounded-2xl pl-12 pr-6 py-4 text-yellow-100 placeholder-yellow-700/40 focus:outline-none focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all font-serif"
+                        className="w-full bg-[#0c1428]/40 border border-yellow-900/20 rounded-[1.5rem] pl-14 pr-8 py-5 text-yellow-100 placeholder-yellow-800/40 focus:outline-none focus:border-yellow-500/50 backdrop-blur-xl transition-all font-serif text-lg shadow-2xl relative z-10 italic"
                     />
                 </div>
             </div>
@@ -77,10 +78,10 @@ const Dashboard = () => {
                     };
 
                     return (
-                        <div
+                        <ManuscriptCard
                             key={sheet.id}
                             onClick={() => handleSelectSheet(sheet.id)}
-                            className={`group relative glass-card rounded-2xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl overflow-hidden ${isActive ? 'ring-2 ring-yellow-500/50 shadow-lg shadow-yellow-900/20' : 'hover:shadow-yellow-900/20'
+                            className={`p-8 cursor-pointer hover:-translate-y-2 hover:shadow-2xl ${isActive ? 'ring-2 ring-yellow-500/50 shadow-lg shadow-yellow-900/20' : 'hover:shadow-yellow-900/20'
                                 }`}
                         >
                             {/* Background Glow */}
@@ -88,9 +89,11 @@ const Dashboard = () => {
 
                             {/* Popular Badge */}
                             {sheet.isPopular && (
-                                <div className="absolute top-4 right-4 flex items-center gap-1 px-2 py-1 bg-yellow-500/20 border border-yellow-500/40 rounded-full">
-                                    <Star size={12} className="text-yellow-500" />
-                                    <span className="text-[10px] text-yellow-500 font-black uppercase tracking-widest">Popular</span>
+                                <div className="absolute top-4 right-4 group">
+                                    <Badge variant="magical" className="flex items-center gap-1 bg-yellow-500/10 border-yellow-500/30">
+                                        <Star size={12} className="text-yellow-500" />
+                                        Popular
+                                    </Badge>
                                 </div>
                             )}
 
@@ -138,26 +141,22 @@ const Dashboard = () => {
                             </div>
 
                             {/* Bottom Progress Bar */}
-                            <div className="absolute bottom-0 left-0 h-1 bg-yellow-900/10 w-full overflow-hidden">
-                                <div
-                                    className="h-full bg-gradient-to-r from-yellow-700 to-yellow-400 transition-all duration-1000"
-                                    style={{ width: `${percentage}%` }}
-                                />
-                            </div>
-                        </div>
+                            <Progress value={sheet.completedQuestions} max={sheet.totalQuestions} className="absolute bottom-0 left-0 w-full rounded-none" />
+                        </ManuscriptCard>
                     );
                 })}
 
                 {/* Placeholder for future sheets */}
-                <div className="border-2 border-dashed border-yellow-900/10 rounded-2xl p-8 flex flex-col items-center justify-center text-center group hover:border-yellow-900/30 transition-all cursor-default">
-                    <div className="w-12 h-12 bg-yellow-900/5 rounded-full flex items-center justify-center mb-4 text-yellow-900/30 group-hover:scale-110 transition-transform">
-                        <Plus size={24} />
+                <div className="border border-dashed border-yellow-900/20 rounded-2xl p-10 flex flex-col items-center justify-center text-center group hover:border-yellow-500/30 transition-all cursor-default bg-yellow-900/5 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none" />
+                    <div className="w-16 h-16 bg-yellow-900/10 rounded-full flex items-center justify-center mb-6 text-yellow-700/40 group-hover:scale-110 group-hover:text-yellow-500 transition-all duration-500">
+                        <Plus size={32} />
                     </div>
-                    <h3 className="text-sm font-black text-yellow-900/40 font-magical tracking-widest uppercase mb-1">
-                        More Archives Coming
+                    <h3 className="text-base font-black text-yellow-700/50 font-magical tracking-[0.2em] uppercase mb-2 group-hover:text-yellow-500/60 transition-colors">
+                        Expanding Archives
                     </h3>
-                    <p className="text-yellow-900/20 text-xs font-serif italic">
-                        Expanding the library of mastery...
+                    <p className="text-yellow-800/30 text-xs font-serif italic max-w-[180px]">
+                        The library of mastery is ever-growing. New manuscripts await discovery...
                     </p>
                 </div>
             </div>
