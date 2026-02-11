@@ -15,13 +15,6 @@ function App() {
   // Inject global asset styles from environment variables
   React.useEffect(() => {
     const style = document.createElement('style');
-    style.innerHTML = `
-      :root {
-        --stardust-url: url('${import.meta.env.VITE_STARDUST_URL}');
-        --leather-url: url('${import.meta.env.VITE_LEATHER_URL}');
-        --cursor-url: url('${import.meta.env.VITE_CURSOR_URL}');
-      }
-    `;
     document.head.appendChild(style);
     return () => document.head.removeChild(style);
   }, []);
@@ -69,7 +62,7 @@ function App() {
 
   // One-time layout fix for existing users
   React.useEffect(() => {
-    const storageKeyPrefix = import.meta.env.VITE_STORAGE_KEY || 'zeus-sheets-storage';
+    const storageKeyPrefix = 'sheet-storage'; // Hardcoded fallback for now
     const hasConsolidated = localStorage.getItem(`${storageKeyPrefix}-layout-consolidated`);
     const hasSanitized = localStorage.getItem(`${storageKeyPrefix}-terms-sanitized`);
 

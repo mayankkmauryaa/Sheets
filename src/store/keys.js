@@ -10,19 +10,9 @@ export const API_KEYS = {
     CP31_ADV: (rating) => `${rating}-cp-31-sheet`
 };
 
-// Safe access for import.meta.env (Vite only)
-const getBaseUrl = () => {
-    try {
-        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) {
-            return import.meta.env.VITE_API_BASE_URL;
-        }
-    } catch (e) {
-        // Fallback for non-Vite environments
-    }
-    return "https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/";
-};
 
-export const BASE_URL = getBaseUrl();
+
+export const BASE_URL = "https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/";
 export const getSheetUrl = (slug) => `${BASE_URL}${slug}`;
 
 /**
@@ -56,19 +46,4 @@ export async function fetchAllKeys(slug) {
         console.error(`API Error Extracting Keys for ${slug}:`, error);
         return [];
     }
-}
-
-/**
- * REDIRECTOR: If this file is run directly in Node (terminal), 
- * it will dynamically load the debug tools to avoid browser errors.
- */
-if (typeof process !== 'undefined' && process.argv && process.argv[1] && process.argv[1].includes('keys.js')) {
-    // Use dynamic import to keep Node modules (fs, path) out of the browser bundle
-    (async () => {
-        try {
-            await import('./debug-keys.js');
-        } catch (err) {
-            console.error("Failed to launch debug tools:", err);
-        }
-    })();
 }

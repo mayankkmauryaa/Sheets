@@ -193,7 +193,7 @@ const SheetSelection = () => {
   return (
     <div className="min-h-screen bg-[#050a14] selection:bg-yellow-900/30">
       {/* Sparkle Background */}
-      <div className="fixed inset-0 bg-[url(var(--stardust-url))] opacity-10 pointer-events-none" />
+      <div className="fixed inset-0 stardust-bg opacity-10 pointer-events-none" />
 
       {/* Header */}
       <div className="relative z-10 border-b border-[#ffd70033] bg-[#050a14]">

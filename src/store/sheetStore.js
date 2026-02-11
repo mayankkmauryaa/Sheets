@@ -769,7 +769,7 @@ const useSheetStore = create(
       }
     }),
     {
-      name: import.meta.env.VITE_STORAGE_KEY || 'zeus-sheets-storage',
+      name: 'sheet-storage',
       partialize: (state) => ({
         topics: state.topics,
         activity: state.activity,

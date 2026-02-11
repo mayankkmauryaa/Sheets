@@ -93,14 +93,6 @@ The app comes pre-loaded with **27 Topics** covering essential DSA concepts:
    ```bash
    npm install
    ```
-3. **Environment Configuration**:
-   Create a `.env` file in the root directory based on `.env.example`:
-   ```env
-   VITE_API_BASE_URL=https://your-api-url.com
-   VITE_STORAGE_KEY=your-storage-key
-   VITE_STARDUST_URL=your-asset-url
-   VITE_LEATHER_URL=your-asset-url
-   VITE_CURSOR_URL=your-asset-url
    ```
 4. **Start the development server**:
    ```bash
