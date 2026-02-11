@@ -10,7 +10,7 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import QuestionList from './QuestionList';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 
 const SubTopic = ({ topicId, topicTitle, subTopic, index }) => {
   const [isEditing, setIsEditing] = useState(false);

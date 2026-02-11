@@ -12,7 +12,8 @@ import {
   ShieldCheck,
   Flame
 } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
+import { getSlugById } from '../../store/sheets';
 
 const SheetCard = ({ sheet, isActive, onSelect, stats }) => {
   const percentage = sheet.totalQuestions > 0 ? Math.round((sheet.completedQuestions / sheet.totalQuestions) * 100) : 0;
@@ -90,10 +91,6 @@ const SheetCard = ({ sheet, isActive, onSelect, stats }) => {
           )}
         </div>
 
-        {/* Description */}
-        <p className="text-sm text-yellow-100/70 leading-relaxed mb-6 font-serif">
-          {sheet.description}
-        </p>
 
         {/* Stats */}
         <div className="space-y-4">
@@ -148,8 +145,8 @@ const SheetCard = ({ sheet, isActive, onSelect, stats }) => {
           {/* Action Button */}
           <button
             className={`w-full py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all duration-300 ${isActive
-                ? `bg-gradient-to-r ${colors.progress} text-white shadow-lg`
-                : `bg-gradient-to-r ${colors.bg} ${colors.text} border ${colors.border} hover:shadow-lg`
+              ? `bg-gradient-to-r ${colors.progress} text-white shadow-lg`
+              : `bg-gradient-to-r ${colors.bg} ${colors.text} border ${colors.border} hover:shadow-lg`
               } font-magical flex items-center justify-center gap-2`}
           >
             {isActive ? (
@@ -185,7 +182,8 @@ const SheetSelection = () => {
       setCurrentSheet(sheetId);
       await fetchRemoteSheet(sheetId);
     }
-    navigate('/sheet');
+    const slug = getSlugById(sheetId);
+    navigate(`/u/${slug}`);
   };
 
   const totalQuestions = availableSheets.reduce((acc, sheet) => acc + sheet.totalQuestions, 0);
@@ -195,7 +193,7 @@ const SheetSelection = () => {
   return (
     <div className="min-h-screen bg-[#050a14] selection:bg-yellow-900/30">
       {/* Sparkle Background */}
-      <div className="fixed inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none" />
+      <div className="fixed inset-0 bg-[url(var(--stardust-url))] opacity-10 pointer-events-none" />
 
       {/* Header */}
       <div className="relative z-10 border-b border-[#ffd70033] bg-[#050a14]">
@@ -299,15 +297,15 @@ const SheetSelection = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-yellow-600/60 font-medium tracking-widest uppercase">
-              ✨ ZEUS MAGIC SHEET - Master the Art of Coding
+              ✨ ZEUS MAGIC SHEETS - Master the Art of Coding
             </p>
             <div className="flex items-center gap-6">
               <p className="text-xs text-red-900/40 font-serif italic">
                 Powered by ZEUS Archives
               </p>
-              <p className="text-sm text-yellow-900/40">
+              {/* <p className="text-sm text-yellow-900/40">
                 React + Vite + Magical CSS
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

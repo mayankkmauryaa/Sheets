@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { availableSheets as configSheets } from './sheets';
+import { getSheetUrl } from './keys';
 
 // ZEUS SDE Sheet - Complete Data Structure
 const initialData = { topics: [] };
@@ -248,6 +250,30 @@ const useSheetStore = create(
         set({ topics });
       },
 
+      reorderTopics: (oldIndex, newIndex) => {
+        set((state) => {
+          const newTopics = [...state.topics];
+          const [movedTopic] = newTopics.splice(oldIndex, 1);
+          newTopics.splice(newIndex, 0, movedTopic);
+          return { topics: newTopics };
+        });
+      },
+
+      reorderSubTopics: (topicId, oldIndex, newIndex) => {
+        set((state) => {
+          const topics = state.topics.map((topic) => {
+            if (topic.id === topicId) {
+              const newSubTopics = [...topic.subTopics];
+              const [movedSubTopic] = newSubTopics.splice(oldIndex, 1);
+              newSubTopics.splice(newIndex, 0, movedSubTopic);
+              return { ...topic, subTopics: newSubTopics };
+            }
+            return topic;
+          });
+          return { topics };
+        });
+      },
+
       toggleQuestionStatus: (topicId, subTopicId, questionId) => {
         let isNowCompleted = false;
         let completionDate = null;
@@ -467,46 +493,21 @@ const useSheetStore = create(
         });
       },
 
-      // Available Sheets Configuration
-      availableSheets: [
-        {
-          id: 'strivers-a2z-dsa-sheet',
-          title: 'ZEUS A2Z DSA',
-          description: 'Complete DSA journey from fundamentals to advanced topics. Structured learning path for interview preparation.',
-          difficulty: 'Beginner to Advanced',
-          totalQuestions: 0,
-          completedQuestions: 0,
-          color: 'blue',
-          icon: '🔮',
-          isPopular: true
-        },
-        {
-          id: 'striver-sde-sheet',
-          title: 'ZEUS SDE SHEET',
-          description: 'Master the Art of Coding with the legendary SDE sheet. 450+ hand-picked problems from top tech archives.',
-          difficulty: 'Intermediate to Advanced',
-          totalQuestions: 0,
-          completedQuestions: 0,
-          color: 'yellow',
-          icon: '⚡',
-          isPopular: true
+      // Available Sheets State
+      availableSheets: configSheets,
+
+      syncAvailableSheets: () => {
+        const state = get();
+        const currentIds = new Set(state.availableSheets.map(s => s.id));
+        const missingSheets = configSheets.filter(s => !currentIds.has(s.id));
+
+        if (missingSheets.length > 0) {
+          set({ availableSheets: [...state.availableSheets, ...missingSheets] });
         }
-      ],
+      },
 
       // Current active sheet
       currentSheetId: 'strivers-a2z-dsa-sheet',
-
-      /*
-      const sde = https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/striver-sde-sheet;
-
-      const a2z = 'https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/strivers-a2z-dsa-sheet';
-
-      const cp31 : ['https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/800-rated-cp-31-sheet','https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/900-rated-cp-31-sheet'
-      
-
-      .... from 800-1900
-    ]
-      */
 
       // Sheet Management Actions
       setCurrentSheet: (sheetId) => set({ currentSheetId: sheetId }),
@@ -531,10 +532,10 @@ const useSheetStore = create(
       },
 
       // API Integration - Fetch Remote Sheet
-      fetchRemoteSheet: async (slug = 'strivers-a2z-dsa-sheet') => {
-        set({ isLoading: true, error: null });
+      fetchRemoteSheet: async (slug = 'strivers-a2z-dsa-sheet', updateOnlyMetadata = false) => {
+        if (!updateOnlyMetadata) set({ isLoading: true, error: null });
         try {
-          const response = await fetch(`https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug/${slug}`);
+          const response = await fetch(getSheetUrl(slug));
           const result = await response.json();
 
           if (!result.status.success) {
@@ -545,22 +546,43 @@ const useSheetStore = create(
           const topicMap = new Map();
 
           questions.forEach((q, index) => {
-            const topicTitle = q.topic || 'Uncategorized';
+            // Normalize CP-31 nested structure vs Standard structure
+            const qData = q.questionId || {};
+            const topicTitle = q.topic || qData.topics?.[0] || 'Uncategorized';
             const subTopicTitle = q.subTopic || '';
-            const difficultyMapping = {
-              'Easy': 'Easy',
-              'Medium': 'Medium',
-              'Hard': 'Hard'
-            };
+
+            // Map numeric ratings (800-1900) or strings to Display Difficulty
+            const rawDiff = qData.difficulty || 'Medium';
+            let mappedDifficulty = 'Medium';
+
+            if (typeof rawDiff === 'string' && /^\d+$/.test(rawDiff)) {
+              const rating = parseInt(rawDiff, 10);
+              if (rating < 1200) mappedDifficulty = 'Easy';
+              else if (rating < 1600) mappedDifficulty = 'Medium';
+              else mappedDifficulty = 'Hard';
+            } else {
+              const difficultyMapping = {
+                'Easy': 'Easy',
+                'Medium': 'Medium',
+                'Hard': 'Hard'
+              };
+              mappedDifficulty = difficultyMapping[rawDiff] || 'Medium';
+            }
 
             const mappedQuestion = {
               id: q._id || `q-${index}`,
-              title: q.title,
-              difficulty: difficultyMapping[q.questionId?.difficulty] || 'Medium',
-              platform: q.questionId?.platform || 'Practice',
-              link: q.questionId?.problemUrl || q.resource,
+              title: q.title || qData.name || 'Untitled Problem',
+              difficulty: mappedDifficulty,
+              platform: qData.platform || 'Practice',
+              link: qData.problemUrl || q.resource || '#',
               status: q.isSolved ? 'completed' : 'pending',
-              order: index + 1
+              order: q.questionOrder || index + 1,
+              topicOrder: q.topicOrder || 0,
+              subTopicOrder: q.subTopicOrder || 0,
+              // Rich Metadata
+              companyTags: qData.companyTags || [],
+              verified: qData.verified || false,
+              description: qData.description || '',
             };
 
             if (!topicMap.has(topicTitle)) {
@@ -575,22 +597,58 @@ const useSheetStore = create(
             subTopicMap.get(subTopicTitle).push(mappedQuestion);
           });
 
-          const newTopics = Array.from(topicMap.keys()).map((topicTitle, topicIdx) => {
-            const subTopicMap = topicMap.get(topicTitle);
-            const subTopics = Array.from(subTopicMap.keys()).map((subTopicTitle, subTopicIdx) => ({
-              id: `subtopic-${topicIdx}-${subTopicIdx}`,
-              title: subTopicTitle,
-              order: subTopicIdx + 1,
-              questions: subTopicMap.get(subTopicTitle)
-            }));
+          // Helper function to extract numeric prefix from strings like "Step 1", "Lec 2", etc.
+          const extractNumericPrefix = (str) => {
+            if (!str) return 999999; // Put items without numbers at the end
+            const match = str.match(/(?:Step|Lec|Lecture)\s*(\d+)/i);
+            return match ? parseInt(match[1], 10) : 999999;
+          };
+
+          // Sort topics and questions
+          const topicArray = Array.from(topicMap.entries()).map(([topicTitle, subTopicMap]) => {
+            // Extract order from topic name or use API topicOrder if available
+            const firstSubTopic = Array.from(subTopicMap.values())[0];
+            const topicOrder = firstSubTopic?.[0]?.topicOrder ?? extractNumericPrefix(topicTitle);
+
+            const subTopicArray = Array.from(subTopicMap.entries()).map(([subTopicTitle, questions]) => {
+              // Extract order from subtopic name or use API subTopicOrder if available
+              const subTopicOrder = questions[0]?.subTopicOrder ?? extractNumericPrefix(subTopicTitle);
+
+              // Sort questions by their order field
+              questions.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+              return {
+                title: subTopicTitle,
+                order: subTopicOrder,
+                questions
+              };
+            });
+
+            // Sort subtopics by their order
+            subTopicArray.sort((a, b) => a.order - b.order);
 
             return {
-              id: `topic-${topicIdx}`,
               title: topicTitle,
-              order: topicIdx + 1,
-              subTopics
+              order: topicOrder,
+              subTopics: subTopicArray
             };
           });
+
+          // Sort topics by their order
+          topicArray.sort((a, b) => a.order - b.order);
+
+          // Now assign IDs based on sorted positions
+          const newTopics = topicArray.map((topic, topicIdx) => ({
+            id: `topic-${topicIdx}`,
+            title: topic.title,
+            order: topic.order,
+            subTopics: topic.subTopics.map((subTopic, subTopicIdx) => ({
+              id: `subtopic-${topicIdx}-${subTopicIdx}`,
+              title: subTopic.title,
+              order: subTopic.order,
+              questions: subTopic.questions
+            }))
+          }));
 
           const stats = {
             totalQuestions: newTopics.reduce((acc, topic) =>
@@ -601,16 +659,36 @@ const useSheetStore = create(
                 subAcc + subTopic.questions.filter(q => q.status === 'completed').length, 0), 0)
           };
 
-          get().updateSheetProgress(slug, stats);
+          // Extract sheet-level metadata from the first question's sheet info or overall result if available
+          const sheetMetadata = result.data.sheet || {};
 
-          set({
-            topics: newTopics,
-            isLoading: false,
-            lastSynced: new Date().toISOString()
-          });
+          set((state) => ({
+            availableSheets: state.availableSheets.map(sheet =>
+              sheet.id === slug
+                ? {
+                  ...sheet,
+                  totalQuestions: stats.totalQuestions,
+                  completedQuestions: stats.completedQuestions,
+                  // Rich Sheet Metadata
+                  author: sheetMetadata.author?.name || sheet.author,
+                }
+                : sheet
+            )
+          }));
+
+          const updates = { lastSynced: new Date().toISOString() };
+
+          if (!updateOnlyMetadata) {
+            updates.topics = newTopics;
+            updates.expandedTopics = new Set();
+            updates.expandedSubTopics = new Set();
+            updates.isLoading = false;
+          }
+
+          set(updates);
         } catch (error) {
           console.error('Error fetching remote sheet:', error);
-          set({ isLoading: false, error: error.message });
+          if (!updateOnlyMetadata) set({ isLoading: false, error: error.message });
         }
       },
 
@@ -691,11 +769,9 @@ const useSheetStore = create(
       }
     }),
     {
-      name: 'zeus-sheets-storage',
+      name: import.meta.env.VITE_STORAGE_KEY || 'zeus-sheets-storage',
       partialize: (state) => ({
         topics: state.topics,
-        expandedTopics: Array.from(state.expandedTopics),
-        expandedSubTopics: Array.from(state.expandedSubTopics),
         activity: state.activity,
         currentStreak: state.currentStreak,
         maxStreak: state.maxStreak,
@@ -705,8 +781,9 @@ const useSheetStore = create(
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
-          state.expandedTopics = new Set(state.expandedTopics || []);
-          state.expandedSubTopics = new Set(state.expandedSubTopics || []);
+          state.expandedTopics = new Set();
+          state.expandedSubTopics = new Set();
+          state.syncAvailableSheets();
         }
       }
     }

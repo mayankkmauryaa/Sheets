@@ -1,13 +1,31 @@
 import React from 'react';
-import Header from './components/Header';
-import TopicList from './components/TopicList';
-import ActivityGraph from './components/ActivityGraph';
-import Controls from './components/Controls';
-import Dashboard from './components/Dashboard';
+import { useParams, useNavigate } from 'react-router-dom';
+import Header from './components/layout/Header';
+import TopicList from './features/sheet/TopicList';
+import ActivityGraph from './features/sheet/ActivityGraph';
+import Controls from './features/sheet/Controls';
+import Dashboard from './features/dashboard/Dashboard';
 import useSheetStore from './store/sheetStore';
-import './App.css';
+import { getIdBySlug, getSlugById } from './store/sheets';
 
 function App() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+
+  // Inject global asset styles from environment variables
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      :root {
+        --stardust-url: url('${import.meta.env.VITE_STARDUST_URL}');
+        --leather-url: url('${import.meta.env.VITE_LEATHER_URL}');
+        --cursor-url: url('${import.meta.env.VITE_CURSOR_URL}');
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
+
   const {
     topics,
     searchQuery,
@@ -17,42 +35,79 @@ function App() {
     isLoading,
     error,
     fetchRemoteSheet,
-    currentView
+    currentView,
+    setView,
+    currentSheetId,
+    setCurrentSheet
   } = useSheetStore();
+
+  // Sync URL with store state (URL is source of truth)
+  React.useEffect(() => {
+    if (slug && slug !== 'all') {
+      // Convert slug to ID for store operations
+      const sheetId = getIdBySlug(slug);
+      if (sheetId) {
+        // URL has a specific sheet, load it if needed
+        if (currentSheetId !== sheetId) {
+          setCurrentSheet(sheetId);
+          fetchRemoteSheet(sheetId);
+        }
+        if (currentView !== 'sheet') {
+          setView('sheet');
+        }
+      } else {
+        // Invalid slug, redirect to dashboard
+        navigate('/u/all', { replace: true });
+      }
+    } else {
+      // URL is /u/all, show dashboard
+      if (currentView !== 'dashboard') {
+        setView('dashboard');
+      }
+    }
+  }, [slug]); // Only depend on slug to prevent loops
 
   // One-time layout fix for existing users
   React.useEffect(() => {
-    const hasConsolidated = localStorage.getItem('sheets-layout-consolidated');
-    const hasSanitized = localStorage.getItem('sheets-terms-sanitized');
+    const storageKeyPrefix = import.meta.env.VITE_STORAGE_KEY || 'zeus-sheets-storage';
+    const hasConsolidated = localStorage.getItem(`${storageKeyPrefix}-layout-consolidated`);
+    const hasSanitized = localStorage.getItem(`${storageKeyPrefix}-terms-sanitized`);
+
+    const state = useSheetStore.getState();
 
     if (!hasConsolidated || !hasSanitized) {
-      useSheetStore.getState().topics.forEach(topic => {
+      state.topics.forEach(topic => {
         topic.subTopics.forEach(subTopic => {
           if (subTopic.title === 'Scroll of Problems') {
-            useSheetStore.getState().updateSubTopic(topic.id, subTopic.id, '');
+            state.updateSubTopic(topic.id, subTopic.id, '');
           }
         });
       });
 
       if (!hasConsolidated) {
         consolidateSheets();
-        localStorage.setItem('sheets-layout-consolidated', 'true');
+        localStorage.setItem(`${storageKeyPrefix}-layout-consolidated`, 'true');
       }
-      localStorage.setItem('sheets-terms-sanitized', 'true');
+      localStorage.setItem(`${storageKeyPrefix}-terms-sanitized`, 'true');
     }
   }, [consolidateSheets]);
 
-  // Initial data fetch from Codolio - Only fetch when entering sheet view
+  // Synchronize all available sheets on initial load to populate dashboard counts
   React.useEffect(() => {
-    // Only fetch when actually viewing a sheet, not on dashboard
-    if (currentView === 'sheet') {
-      const lastSynced = useSheetStore.getState().lastSynced;
-      const currentSheetId = useSheetStore.getState().currentSheetId;
-      if (!lastSynced) {
-        fetchRemoteSheet(currentSheetId);
+    const { availableSheets, fetchRemoteSheet, currentSheetId } = useSheetStore.getState();
+
+    availableSheets.forEach((sheet) => {
+      // Fetch data for all sheets that haven't been synchronized yet
+      if (sheet.totalQuestions === 0) {
+        // Only update 'topics' if it's the current sheet, otherwise just update metadata
+        const isCurrentSheet = sheet.id === currentSheetId;
+        fetchRemoteSheet(sheet.id, !isCurrentSheet);
       }
-    }
-  }, [fetchRemoteSheet, currentView]);
+    });
+
+    // If current sheet IS synchronized but we are entering sheet view, 
+    // we don't need a separate effect if we trust the initial sync/persistence.
+  }, [fetchRemoteSheet]);
 
   // Filter topics based on search and filters
   const filteredTopics = topics.map(topic => {
@@ -165,15 +220,15 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-yellow-600/60 font-medium tracking-widest uppercase">
-              ✨ ZEUS MAGIC SHEET - Master the Art of Coding
+              ✨ ZEUS MAGIC SHEETS - Master the Art of Coding
             </p>
             <div className="flex items-center gap-6">
               <p className="text-xs text-red-900/40 font-serif italic">
                 Powered by ZEUS Archives
               </p>
-              <p className="text-sm text-yellow-900/40">
-                React + Vite + Magical CSS
-              </p>
+              {/* <p className="text-sm text-yellow-900/40">
+                
+              </p> */}
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ChevronDown, Edit2, Trash2, MoreHorizontal, Zap, X, GripVertical, Plus, BookOpen, Scroll as ScrollIcon } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 import SubTopicList from './SubTopicList';
 
 const Topic = ({ topic, index }) => {

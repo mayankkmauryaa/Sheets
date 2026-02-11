@@ -1,10 +1,14 @@
 import React from 'react';
-import { Zap, ChevronRight, BookOpen, Star, Trophy, Sparkles, Plus } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import { useNavigate } from 'react-router-dom';
+import { Zap, ChevronRight, BookOpen, Star, Trophy, Sparkles, Plus, Search } from 'lucide-react';
+import useSheetStore from '../../store/sheetStore';
+import { getSlugById } from '../../store/sheets';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const { setView, availableSheets, currentSheetId, setCurrentSheet, fetchRemoteSheet, getStatistics } = useSheetStore();
     const stats = getStatistics();
+    const [searchQuery, setSearchQuery] = React.useState('');
 
     const handleSelectSheet = async (sheetId) => {
         if (sheetId !== currentSheetId) {
@@ -12,11 +16,19 @@ const Dashboard = () => {
             await fetchRemoteSheet(sheetId);
         }
         setView('sheet');
+        const slug = getSlugById(sheetId);
+        navigate(`/u/${slug}`);
     };
+
+    // Filter sheets based on search query
+    const filteredSheets = availableSheets.filter(sheet =>
+        sheet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        sheet.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div className="reveal-animation py-8">
-            <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center justify-between mb-8">
                 <div>
                     <h2 className="text-3xl font-black text-yellow-500 font-magical tracking-widest uppercase mb-2">
                         Sheets
@@ -38,11 +50,25 @@ const Dashboard = () => {
                 </div>
             </div>
 
+            {/* Search Box */}
+            <div className="mb-8">
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-yellow-600/60" size={20} />
+                    <input
+                        type="text"
+                        placeholder="Search manuscripts..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-[#0c1428]/80 border border-yellow-900/30 rounded-2xl pl-12 pr-6 py-4 text-yellow-100 placeholder-yellow-700/40 focus:outline-none focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all font-serif"
+                    />
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {availableSheets.map((sheet) => {
+                {filteredSheets.map((sheet) => {
                     const percentage = sheet.totalQuestions > 0 ? Math.round((sheet.completedQuestions / sheet.totalQuestions) * 100) : 0;
                     const isActive = sheet.id === currentSheetId;
-                    
+
                     const colorClasses = {
                         yellow: 'from-yellow-900/40 to-yellow-600/20',
                         blue: 'from-blue-900/40 to-blue-600/20',
@@ -54,9 +80,8 @@ const Dashboard = () => {
                         <div
                             key={sheet.id}
                             onClick={() => handleSelectSheet(sheet.id)}
-                            className={`group relative glass-card rounded-2xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl overflow-hidden ${
-                                isActive ? 'ring-2 ring-yellow-500/50 shadow-lg shadow-yellow-900/20' : 'hover:shadow-yellow-900/20'
-                            }`}
+                            className={`group relative glass-card rounded-2xl p-8 cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl overflow-hidden ${isActive ? 'ring-2 ring-yellow-500/50 shadow-lg shadow-yellow-900/20' : 'hover:shadow-yellow-900/20'
+                                }`}
                         >
                             {/* Background Glow */}
                             <div className={`absolute top-0 right-0 w-32 h-32 ${colorClasses[sheet.color]} rounded-full blur-[60px] group-hover:opacity-50 transition-opacity`} />
@@ -70,21 +95,16 @@ const Dashboard = () => {
                             )}
 
                             <div className="relative z-10">
-                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 border ${
-                                    isActive ? 'border-yellow-500 bg-yellow-900/20' : 'border-yellow-900/30 bg-yellow-900/10 group-hover:border-yellow-500'
-                                } transition-colors`}>
+                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 border ${isActive ? 'border-yellow-500 bg-yellow-900/20' : 'border-yellow-900/30 bg-yellow-900/10 group-hover:border-yellow-500'
+                                    } transition-colors`}>
                                     <span className="text-2xl sparkle-animation">{sheet.icon}</span>
                                 </div>
 
-                                <h3 className={`text-xl font-black font-magical tracking-wider uppercase mb-4 ${
-                                    isActive ? 'text-yellow-400' : 'text-yellow-500 group-hover:text-glow-gold'
-                                } transition-all`}>
+                                <h3 className={`text-xl font-black font-magical tracking-wider uppercase mb-4 ${isActive ? 'text-yellow-400' : 'text-yellow-500 group-hover:text-glow-gold'
+                                    } transition-all`}>
                                     {sheet.title}
                                 </h3>
 
-                                <p className="text-yellow-100/60 text-sm leading-relaxed mb-8 spectral italic">
-                                    {sheet.description}
-                                </p>
 
                                 <div className="grid grid-cols-2 gap-4 mb-8">
                                     <div className="bg-[#050a14]/60 p-3 rounded-xl border border-yellow-900/10">

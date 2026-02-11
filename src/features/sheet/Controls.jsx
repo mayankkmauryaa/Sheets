@@ -14,7 +14,7 @@ import {
     Sparkles,
     RefreshCw
 } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 
 const Controls = () => {
     const [showAddTopic, setShowAddTopic] = useState(false);

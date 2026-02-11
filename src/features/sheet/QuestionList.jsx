@@ -13,7 +13,7 @@ import {
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
 import { Plus, ChevronRight, Edit2, Zap, X, Trash2, Book, Sparkles, GripVertical } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 import Question from './Question';
 
 const QuestionList = ({

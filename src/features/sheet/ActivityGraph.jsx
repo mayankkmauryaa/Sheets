@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 import { Flame, Trophy, Scroll, Zap } from 'lucide-react';
 
 const ActivityGraph = () => {

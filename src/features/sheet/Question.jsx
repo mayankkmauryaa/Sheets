@@ -17,7 +17,7 @@ import {
   Flame,
   Ghost
 } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 
 // Platform badge
 const PlatformBadge = ({ platform }) => {
@@ -61,8 +61,8 @@ const DifficultyBadge = ({ difficulty }) => {
 };
 
 // Tag pill
-const TagPill = ({ tag }) => (
-  <span className="px-2 py-0.5 bg-[#0c1428] text-yellow-700 text-[9px] font-black uppercase tracking-widest rounded-full border border-yellow-900/20 font-magical">
+const TagPill = ({ tag, color = 'text-yellow-700', bg = 'bg-[#0c1428]' }) => (
+  <span className={`px-2 py-0.5 ${bg} ${color} text-[9px] font-black uppercase tracking-widest rounded-full border border-yellow-900/20 font-magical`}>
     {tag}
   </span>
 );
@@ -149,9 +149,14 @@ const Question = ({ topicId, subTopicId, question, index }) => {
 
   const getTags = () => {
     const tags = [];
-    if (question.difficulty === 'Easy') tags.push('Fundamental');
-    else if (question.difficulty === 'Medium') tags.push('Intermediate');
-    else tags.push('Advanced');
+    if (question.difficulty === 'Easy') tags.push({ text: 'Fundamental', color: 'text-green-500/60' });
+    else if (question.difficulty === 'Medium') tags.push({ text: 'Intermediate', color: 'text-yellow-500/60' });
+    else tags.push({ text: 'Advanced', color: 'text-red-500/60' });
+
+    // Add company tags as well (max 2 for UI space)
+    if (question.companyTags && question.companyTags.length > 0) {
+      question.companyTags.slice(0, 2).forEach(c => tags.push({ text: c, color: 'text-blue-400/60', bg: 'bg-blue-950/20' }));
+    }
     return tags;
   };
 
@@ -218,22 +223,35 @@ const Question = ({ topicId, subTopicId, question, index }) => {
           </div>
         ) : (
           <>
-            {/* Title */}
-            <div className="flex-1 min-w-0 flex items-center gap-3">
-              <span className={`text-[15px] font-medium tracking-wide truncate ${question.status === 'completed' ? 'text-yellow-800/60 italic spectral' : 'text-yellow-100/95'
-                }`}>
-                {question.title}
-              </span>
-              {question.link && (
-                <a
-                  href={question.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-yellow-600 hover:text-yellow-400 transition-all flex-shrink-0 group-hover:scale-110"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ExternalLink size={14} />
-                </a>
+            {/* Title & Info */}
+            <div className="flex-1 min-w-0 flex flex-col">
+              <div className="flex items-center gap-3">
+                <span className={`text-[15px] font-medium tracking-wide truncate ${question.status === 'completed' ? 'text-yellow-800/60 italic spectral' : 'text-yellow-100/95'
+                  }`}>
+                  {question.title}
+                </span>
+
+                {question.verified && (
+                  <ShieldCheck size={14} className="text-blue-500 sparkle-animation opacity-60" title="Verified Manuscript" />
+                )}
+
+                {question.link && (
+                  <a
+                    href={question.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-yellow-600 hover:text-yellow-400 transition-all flex-shrink-0 group-hover:scale-110"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLink size={14} />
+                  </a>
+                )}
+              </div>
+
+              {question.description && (
+                <span className="text-[10px] text-yellow-800/40 spectral italic truncate max-w-md hidden group-hover:block">
+                  {question.description}
+                </span>
               )}
             </div>
 
@@ -248,9 +266,9 @@ const Question = ({ topicId, subTopicId, question, index }) => {
             </div>
 
             {/* Tags */}
-            <div className="w-24 flex-shrink-0 flex gap-1.5 justify-end hidden md:flex">
+            <div className="w-48 flex-shrink-0 flex gap-1.5 justify-end hidden lg:flex overflow-hidden">
               {getTags().map((tag, i) => (
-                <TagPill key={i} tag={tag} />
+                <TagPill key={i} tag={tag.text} color={tag.color} bg={tag.bg} />
               ))}
             </div>
 

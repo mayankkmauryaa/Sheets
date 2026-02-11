@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import Topic from './Topic';
-import useSheetStore from '../store/sheetStore';
+import SubTopic from './SubTopic';
+import useSheetStore from '../../store/sheetStore';
 
-const TopicList = ({ topics: filteredTopics }) => {
-  const { topics, reorderTopics } = useSheetStore();
-
-  // Use filtered topics if provided, otherwise use all topics
-  const displayTopics = filteredTopics || topics;
+const SubTopicList = ({ topicId, topicTitle, subTopics }) => {
+  const { reorderSubTopics } = useSheetStore();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -25,9 +22,9 @@ const TopicList = ({ topics: filteredTopics }) => {
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      const oldIndex = displayTopics.findIndex(topic => topic.id === active.id);
-      const newIndex = displayTopics.findIndex(topic => topic.id === over.id);
-      reorderTopics(oldIndex, newIndex);
+      const oldIndex = subTopics.findIndex(st => st.id === active.id);
+      const newIndex = subTopics.findIndex(st => st.id === over.id);
+      reorderSubTopics(topicId, oldIndex, newIndex);
     }
   };
 
@@ -38,12 +35,18 @@ const TopicList = ({ topics: filteredTopics }) => {
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={displayTopics.map(t => t.id)}
+        items={subTopics.map(st => st.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="space-y-4">
-          {displayTopics.map((topic, index) => (
-            <Topic key={topic.id} topic={topic} index={index} />
+        <div className="py-2">
+          {subTopics.map((subTopic, index) => (
+            <SubTopic
+              key={subTopic.id}
+              topicId={topicId}
+              topicTitle={topicTitle}
+              subTopic={subTopic}
+              index={index}
+            />
           ))}
         </div>
       </SortableContext>
@@ -51,4 +54,4 @@ const TopicList = ({ topics: filteredTopics }) => {
   );
 };
 
-export default TopicList;
+export default SubTopicList;

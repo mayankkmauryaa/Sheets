@@ -20,7 +20,7 @@ import {
   Scroll,
   ShieldCheck
 } from 'lucide-react';
-import useSheetStore from '../store/sheetStore';
+import useSheetStore from '../../store/sheetStore';
 
 // Progress Card Component with Glass Effect
 const ProgressCard = ({ label, completed, total, color, icon }) => {
@@ -113,8 +113,8 @@ const Header = () => {
 
   const handleShare = async () => {
     const shareData = {
-      title: 'ZEUS MAGIC SHEET',
-      text: 'Check out my progress on the ZEUS MAGIC SHEET!',
+      title: 'ZEUS MAGIC SHEETS',
+      text: 'Check out my progress on the ZEUS MAGIC SHEETS!',
       url: window.location.href
     };
 
@@ -148,27 +148,27 @@ const Header = () => {
           <div className="w-11 h-11 mr-3 flex-shrink-0 bg-[#0c1428] rounded-full overflow-hidden border-2 border-yellow-600 flex items-center justify-center glow-gold">
             <Zap size={22} className="text-yellow-500 sparkle-animation" />
           </div>
-              <ChevronRight size={14} className="text-yellow-700 mx-2" />
-              <span
-                onClick={() => setView('dashboard')}
-                className="text-yellow-500/80 hover:text-yellow-400 cursor-pointer transition-colors tracking-widest uppercase text-[10px] font-black"
-              >
-                Sheets
-              </span>
-              {currentView === 'sheet' && (() => {
-                const currentSheet = useSheetStore.getState().getCurrentSheet();
-                return (
-                  <>
-                    <ChevronRight size={14} className="text-yellow-700 mx-2" />
-                    <span
-                      onClick={() => setView('sheet')}
-                      className="text-yellow-400 font-black font-magical tracking-wider cursor-pointer hover:text-yellow-300 transition-colors"
-                    >
-                      {currentSheet?.icon} {currentSheet?.title}
-                    </span>
-                  </>
-                );
-              })()}
+          <ChevronRight size={14} className="text-yellow-700 mx-2" />
+          <span
+            onClick={() => setView('dashboard')}
+            className="text-yellow-500/80 hover:text-yellow-400 cursor-pointer transition-colors tracking-widest uppercase text-[10px] font-black"
+          >
+            Sheets
+          </span>
+          {currentView === 'sheet' && (() => {
+            const currentSheet = useSheetStore.getState().getCurrentSheet();
+            return (
+              <>
+                <ChevronRight size={14} className="text-yellow-700 mx-2" />
+                <span
+                  onClick={() => setView('sheet')}
+                  className="text-yellow-400 font-black font-magical tracking-wider cursor-pointer hover:text-yellow-300 transition-colors"
+                >
+                  {currentSheet?.icon} {currentSheet?.title}
+                </span>
+              </>
+            );
+          })()}
 
           {/* Spacer */}
           <div className="flex-1" />
@@ -212,16 +212,26 @@ const Header = () => {
                       return `${currentSheet?.icon} ${currentSheet?.title}`;
                     })()}
                   </h1>
-                  <span className="px-2 py-0.5 bg-yellow-900/40 text-yellow-400 text-[10px] font-black rounded border border-yellow-700/50 uppercase tracking-widest">
-                    Latest Edition
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className="px-2 py-0.5 bg-yellow-900/40 text-yellow-400 text-[10px] font-black rounded border border-yellow-700/50 uppercase tracking-widest text-center">
+                      Latest Edition
+                    </span>
+                    {(() => {
+                      const currentSheet = useSheetStore.getState().getCurrentSheet();
+                      return currentSheet?.author && (
+                        <span className="text-[10px] text-yellow-700/60 font-serif italic text-center">
+                          by {currentSheet.author}
+                        </span>
+                      );
+                    })()}
+                  </div>
                 </div>
-                 <p className="text-yellow-100/80 text-sm leading-relaxed max-w-xl font-serif italic">
-                   {(() => {
-                     const currentSheet = useSheetStore.getState().getCurrentSheet();
-                     return currentSheet?.description || 'Master these algorithmic challenges to crack your dream job at Google, Amazon, and beyond. Track your progress and consistency... ✨';
-                   })()}
-                 </p>
+                <p className="text-yellow-100/80 text-sm leading-relaxed max-w-xl font-serif italic">
+                  {(() => {
+                    const currentSheet = useSheetStore.getState().getCurrentSheet();
+                    return currentSheet?.description || 'Master these algorithmic challenges to crack your dream job at Google, Amazon, and beyond. Track your progress and consistency... ✨';
+                  })()}
+                </p>
               </div>
 
               {/* Right Side - Stats */}

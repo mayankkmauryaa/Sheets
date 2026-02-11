@@ -45,12 +45,14 @@ body {
   background-image:
     radial-gradient(ellipse at top, rgba(126, 0, 1, 0.15) 0%, transparent 50%),
     radial-gradient(ellipse at bottom right, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
-    url('https://www.transparenttextures.com/patterns/dark-leather.png');
+    var(--leather-url, url('https://www.transparenttextures.com/patterns/dark-leather.png'));
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Magical title font */
