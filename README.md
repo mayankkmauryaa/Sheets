@@ -1,10 +1,11 @@
-# <p align="center">🚀 Sheets - Interactive Question Management System</p>
+# <p align="center">Sheets - Interactive Question Management System</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
-  <img src="https://img.shields.io/badge/Zustand-443E38?style=for-the-badge&logo=react&logoColor=white" alt="Zustand" />
+  <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/Zustand_5-443E38?style=for-the-badge&logo=react&logoColor=white" alt="Zustand" />
+  <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
   <img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Live Demo" />
 </p>
 
@@ -12,7 +13,7 @@
 
 <p align="center">
   <strong>A modern, premium interactive web application for managing hierarchical questions.</strong><br />
-  🚀 <strong>Live : <a href="https://sheets-blond.vercel.app/">APP</a></strong><br />
+  <strong>Live : <a href="https://sheets-blond.vercel.app/">APP</a></strong><br />
   Designed specifically for tracking progress through the <strong>ZEUS SDE Sheet</strong> and other curated DSA curriculum.
 </p>
 
@@ -22,62 +23,154 @@
 
 ---
 
-## 📜 Table of Contents
-1. [The Vision](#-the-vision)
-2. [Zeus Magic Features](#-zeus-magic-features)
-3. [The Manuscript Architecture](#-the-manuscript-architecture)
-4. [Documentation & Sacred Lore](#-documentation--sacred-lore)
-5. [Getting Started](#getting-started)
-6. [Deployment](#-deployment-guide)
+## Table of Contents
+1.  [The Vision](#the-vision)
+2.  [Core Features](#core-features)
+3.  [Technical Arsenal](#technical-arsenal)
+4.  [The Manuscript Architecture](#the-manuscript-architecture)
+5.  [The Sacred Data Structure](#the-sacred-data-structure)
+6.  [Logic & Mechanics](#logic--mechanics)
+7.  [Dataset: ZEUS SDE Sheet](#dataset-zeus-sde-sheet)
+8.  [Getting Started](#getting-started)
+9.  [Deployment Guide](#deployment-guide)
+10. [Competitive Advantages](#competitive-advantages)
 
 ---
 
-## 👁️ The Vision
+## The Vision
 
-**Sheets** is not just a tool; it's a sanctuary for the modern developer. Inspired by the ancient power of Zeus, this platform transforms the mundane task of DSA tracking into a legendary journey. Every question solved is a victory, every streak maintained is a flame that never dies.
-
----
-
-## ✨ Final Implementation Status
-
-The application is **100% complete** and production-ready, featuring the full **ZEUS SDE Sheet** dataset.
-
-- 🔮 **Zeus Magic Theme**: Immersive dark-magic aesthetic with aurora backgrounds and starfields.
-- 🚀 **Dynamic Landing Page**: Features a 3D Aurora Hero, themed parallax sections, and interactive artifacts.
-- 💎 **Complete Dataset**: 27 topics and 191+ real questions integrated.
-- ⚡ **Full CRUD**: Create, Read, Update, and Delete topics, sub-topics, and questions.
-- 🎯 **Drag & Drop**: Intuitive reordering at all hierarchical levels using `@dnd-kit`.
-- 🔍 **Pro Search & Filter**: Real-time search and multi-criteria filters (status, difficulty).
-- 📈 **Progress Tracking**: Visual progress bars and Github-style activity graph.
-- 💾 **Data Persistence**: Automatic saving to `localStorage` via Zustand.
-- 📤 **Import/Export**: Backup and restore your study progress as JSON.
-- 📱 **Mobile Optimized**: Fully responsive interface for all device sizes.
-- **Improved Routing**: Human-readable URLs (e.g., `/u/zeus-a2z-dsa`) for easy sharing and navigation.
-- 🎨 **Centralized UI Library**: Reusable components for consistent design.
+**Sheets** is not just a tool; it's a sanctuary for the modern developer. Inspired by the ancient power of Zeus, this platform transforms the mundane task of DSA tracking into a legendary journey. Every question solved is a victory, every streak maintained is a flame that never dies. It bridges the gap between static spreadsheets and dynamic, interactive learning environments.
 
 ---
 
-## 📊 Dataset: ZEUS SDE Sheet
+## Core Features
 
-The app comes pre-loaded with **27 Topics** covering essential DSA concepts:
+### Immersive Landing Page
+-   **3D Aurora Hero**: A mesmerizing starfield and aurora effect powered by `Three.js` and `React Three Fiber`.
+-   **Parallax Storytelling**: Interactive sections that reveal the "Artifacts of Power" (components) through smooth scroll animations.
+-   **The Patronus Charm**: A unique "Try a Random Question" feature that use a specialized algorithm to challenge the user.
 
-| Topic           | Focus Area                       | Questions |
-| :-------------- | :------------------------------- | :-------- |
-| **Arrays**      | Basic to Advanced manipulations  | 24        |
-| **Linked List** | SLL, DLL, and cycle detection    | 18        |
-| **Greedy**      | Optimization problems            | 6         |
-| **Recursion**   | Backtracking and basic recursion | 11        |
-| **Trees**       | Binary Trees & BST               | 41        |
-| **Graphs**      | Traversals and Shortest Paths    | 18        |
-| **DP**          | Classical Dynamic Programming    | 16        |
+### The Great Hall (Dashboard)
+-   **Multi-Sheet Selection**: Browse and select from various curated DSA sheets (Striver’s A2Z, Zeus SDE, Love Babbar, etc.).
+-   **Real-time Metadata Sync**: Automatically fetches and updates question counts and progress metadata for all available sheets.
+-   **Stateful Navigation**: Smooth transitions between the global dashboard and individual practice sheets.
+
+### The Practice Sanctuary (Sheet View)
+-   **Hierarchical Management**: Full CRUD operations for Topics, Sub-Topics, and Questions.
+-   **Drag & Drop Mastery**: Intuitively reorder any element at any level using `@dnd-kit`.
+-   **Pro Filtering & Search**:
+    -   Instant search across titles and links.
+    -   Difficulty filters (Easy, Medium, Hard).
+    -   Status filters (Pending, Completed, Revision).
+-   **Note Taking & Favoriting**: Attach sacred scrolls (notes) to questions and star the most challenging ones for later.
+
+### Gamification & Progress
+-   **GitHub-Style Activity Graph**: Visualize your consistency over time with a dynamic heatmap.
+-   **Flame Streak System**: Tracks daily activity to maintain your "Learning Flame."
+-   **Visual Progress Bars**: Real-time feedback on completion percentages at the topic and sub-topic levels.
+
+### Data Resilience
+-   **LocalStorage Persistence**: All progress is etched into the browser's local storage instantly via Zustand middleware.
+-   **Import/Export Magic**: Backup your entire progress or migrate it across devices using JSON files.
+
+---
+
+## Technical Arsenal
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | **React 19** | Core UI library for high-performance rendering. |
+| **Bundler** | **Vite 6** | Ultra-fast development and build environment. |
+| **Styling** | **Tailwind CSS 4** | Utility-first styling with the latest v4 engine. |
+| **State** | **Zustand 5** | Lightweight, transactional state management with persistence. |
+| **3D Graphics** | **Three.js / R3F** | Powering the magical aurora and starfield backgrounds. |
+| **Animation** | **Framer Motion** | Fluid transitions and layout animations. |
+| **Interactivity**| **@dnd-kit** | Robust drag-and-drop orchestration. |
+| **Icons** | **Lucide / React Icons**| Crisp, consistent iconography throughout the app. |
+| **Routing** | **React Router 7** | Human-readable URLs and deep-linking support. |
+
+---
+
+## The Manuscript Architecture
+
+The codebase is organized into modular layers for maximum scalability:
+
+-   **`src/features/`**: Contains the core logic for the three main views.
+    -   `landing/`: The 3D entry portal and parallax content.
+    -   `dashboard/`: The sheet selection hub.
+    -   `sheet/`: The complex logic for the hierarchical practice area.
+-   **`src/store/`**: The brain of the application.
+    -   `sheetStore.js`: A massive Zustand store managing everything from CRUD to streaks.
+    -   `sheets.js`: Configuration for all available DSA sheets.
+-   **`src/layouts/`**: Global UI wrappers like the `Header`, `MagicalBackground`, and `AboutUsModal`.
+-   **`src/components/ui/`**: A centralized library of reusable, theme-consistent UI tokens (Badges, Buttons, Cards, Progress bars).
+
+---
+
+## The Sacred Data Structure
+
+The system uses a 3-tier hierarchical JSON structure to manage data consistency:
+
+```javascript
+{
+  "id": "topic-uuid",
+  "title": "Arrays",
+  "subTopics": [
+    {
+      "id": "subtopic-uuid",
+      "title": "Basic Sorting",
+      "questions": [
+        {
+          "id": "q-uuid",
+          "title": "Bubble Sort",
+          "link": "https://leetcode.com/...",
+          "status": "completed",
+          "difficulty": "Easy",
+          "note": "Don't forget the swapped flag!",
+          "isStarred": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Logic & Mechanics
+
+### Remote Synchronization
+The `fetchRemoteSheet` action in `sheetStore.js` performs a delicate dance between local and remote data. It fetches the latest question sets while carefully preserving the user's localized progress (status, notes, stars).
+
+### The Streak Algorithm
+The `calculateStreak` function parses the `activity` log in the store. It looks for consecutive days of activity, accounting for the current date to determine if a streak is active or has been extinguished.
+
+### URL Source of Truth
+Using React Router, the app treats the URL (e.g., `/u/strivers-a2z-dsa`) as the primary state. Changing the URL automatically triggers the store to switch context and fetch the corresponding sheet data.
+
+---
+
+## Dataset: ZEUS SDE Sheet
+
+Pre-loaded with **27 Topics** covering essential DSA concepts:
+
+| Topic | Focus Area | Questions |
+| :--- | :--- | :--- |
+| **Arrays** | Basic to Advanced manipulations | 24 |
+| **Linked List** | SLL, DLL, and cycle detection | 18 |
+| **Greedy** | Optimization problems | 6 |
+| **Recursion** | Backtracking and basic recursion | 11 |
+| **Trees** | Binary Trees & BST | 41 |
+| **Graphs** | Traversals and Shortest Paths | 18 |
+| **DP** | Classical Dynamic Programming | 16 |
 
 > **Platform Coverage**: LeetCode, GeeksforGeeks, InterviewBit, Spoj, and Codestudio.
 
 ---
 
-## 📋 Project Requirements
+## Project Requirements
 
-### ✅ Functional Requirements
+### Functional Requirements
 
 - **Add Topic**: Create, edit, and delete main topics.
 - **Add Sub-topic**: Create, edit, and delete sub-topics under existing topics.
@@ -85,7 +178,7 @@ The app comes pre-loaded with **27 Topics** covering essential DSA concepts:
 - **Reorder Elements**: Change the order of topics, sub-topics, and questions via drag-and-drop.
 - **Search & Filter**: Quickly find specific sheets and questions.
 
-### ⚙️ Technical Requirements
+### Technical Requirements
 
 - **Framework**: Built with **React 18.3+** for high performance.
 - **Styling**: Modern dark-theme UI using **Tailwind CSS v4.1**.
@@ -97,41 +190,36 @@ The app comes pre-loaded with **27 Topics** covering essential DSA concepts:
 ## Getting Started
 
 ### Prerequisites
-
 - Node.js 18+
 - npm or yarn
 
 ### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/mayankkmauryaa/Sheets.git
-   cd Sheets
-   ```
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-   ```
-4. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-5. Open [http://localhost:5173](http://localhost:5173) in your browser.
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/mayankkmauryaa/Sheets.git
+    cd Sheets
+    ```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Start the development server**:
+    ```bash
+    npm run dev
+    ```
+4.  Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## 🎯 Deployment Guide
+## Deployment Guide
 
-### ☁️ Netlify (Recommended)
-
+### Netlify (Recommended)
 ```bash
 npm run build
 npx netlify deploy --prod --dir=dist
 ```
 
-### ⚡ Vercel
-
+### Vercel
 ```bash
 npm install -g vercel
 npm run build
@@ -140,7 +228,7 @@ vercel --prod dist
 
 ---
 
-## 🏗 Project Structure
+## Project Structure
 
 The project follows a scalable, feature-based architecture:
 
@@ -160,7 +248,7 @@ src/
 └── Router.jsx          # Routing configuration
 ```
 
-## 🏗️ The Manuscript Architecture
+## The Manuscript Architecture
 
 The system is architected for maximum speed and readability, mirroring the efficiency of lightning.
 
@@ -178,7 +266,7 @@ The system is architected for maximum speed and readability, mirroring the effic
 
 ---
 
-## 📚 Documentation & Sacred Lore
+## Documentation & Sacred Lore
 
 The **"View Documentation"** button in the Artifacts of Power section serves as your portal to the deeper understanding of this system. It encompasses:
 
@@ -197,17 +285,17 @@ The **"View Documentation"** button in the Artifacts of Power section serves as 
 
 ---
 
-## 🏆 Competitive Advantages
+## Competitive Advantages
 
-- 🎨 **Premium UI**: Clean, modern design with dark mode and smooth micro-animations.
-- 🔒 **Privacy First**: All data is stored locally in your browser. No internet required.
-- 🛠 **Fully Customizable**: Unlike static sheets, this app allows full content control.
-- 🚀 **High Performance**: Optimized bundle (~300KB) for instant load times.
-- 🔗 **Smart Routing**: Human-readable URLs and deep linking support.
+-   **Premium UI**: Dark mode with aurora backgrounds and glassmorphism.
+-   **Privacy First**: All data is stored locally in your browser.
+-   **Fully Customizable**: Unlike static PDF sheets, you can add your own questions.
+-   **High Performance**: Optimized bundle (~300KB) and React 19 concurrent features.
+-   **Smart Routing**: Human-readable URLs for easy bookmarking.
 
 ---
 
-## 📜 License & Support
+## License & Support
 
 This project is licensed under the **MIT License**.<br>
 For support, contact **hpmayankmaurya@gmail.com** or open an issue in the repository.
@@ -223,5 +311,5 @@ For support, contact **hpmayankmaurya@gmail.com** or open an issue in the reposi
 ---
 
 <p align="center">
-  <i>Built with ❤️ for the DSA Community</i>
+  <i>Built with for the DSA Community</i>
 </p>
